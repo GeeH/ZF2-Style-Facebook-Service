@@ -22,7 +22,7 @@ class Facebook
      */
     protected $config = array(
         'useiframeauth' =>      true,
-        'useconnectauth' =>    true
+        'useconnectauth' =>     true
     );
     
     /**
