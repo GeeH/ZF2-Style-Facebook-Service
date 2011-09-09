@@ -2,7 +2,18 @@
 namespace Spabby;
 use Zend\Http\Client;
 
-
+/**
+ * Container class for Facebook integration, contains automatic authentication
+ * @todo Add extended permissions requests
+ * @todo Add update/delete methods for graph
+ * @todo Add FQL handler https://developers.facebook.com/docs/reference/fql/ 
+ * @todo Add proxy methods to Access https://developers.facebook.com/docs/reference/api/
+ * @todo View helpers for the fb js class https://developers.facebook.com/docs/reference/javascript/
+ * @todo View helpers for social plugins https://developers.facebook.com/docs/plugins/
+ * @todo Meta tag generation https://developers.facebook.com/docs/reference/plugins/like/
+ * @todo View helpers for the FB Dialog system https://developers.facebook.com/docs/reference/dialogs/
+ * @todo Facebook Credits API integration (may be seperate module)
+ */
 class Facebook 
 {
     /** @var string **/
@@ -14,7 +25,7 @@ class Facebook
     /** @var Spabby\Facebook\Auth **/
     protected $auth;
     /** @var Access; **/
-    protected $fbAccess;
+    protected $api;
     /**
      * Configuration array, set using the constructor or using ::setConfig()
      *
@@ -31,7 +42,7 @@ class Facebook
      * @param string $signedRequest Signed request string posted from Facebook
      */
     public function __construct($fbSecret, $fbClientId, 
-            $signedRequest=null, $fbCode=null, $config=null)
+            $signedRequest=null, $fbCode=null, array $config=null)
     {
         $this->fbSecret = $fbSecret;
         $this->fbClientId = $fbClientId;
@@ -99,28 +110,14 @@ class Facebook
      * Returns the Facebook Access Object
      * @return Spabby\Facebook\Access
      */
-    protected function getAccess()
+    public function api()
     {
-        if(!is_a($this->fbAccess, 'Access'))
+        if(!is_a($this->api, 'Access'))
         {
-            $this->fbAccess = new Facebook\Access($this->getAuth(), 
+            $this->api = new Facebook\Access($this->getAuth(), 
                     new Client());            
         }
-        return $this->fbAccess;
+        return $this->api;
     }
-    
-    /**
-     * Proxy to the get data from the graph api
-     * @param string $method Method to get in camel case
-     * @return \stdClass
-     */
-    public function __get($method)
-    {
-        $method = 'get'.\ucfirst($method);
-        if(!\method_exists($this->getAccess(), $method))
-        {
-            throw new AccessException("No such method {$method}");
-        }
-        return $this->getAccess()->$method();
-    }
+        
 }
