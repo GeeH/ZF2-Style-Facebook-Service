@@ -16,15 +16,25 @@ use Zend\Http\Client;
  */
 class Facebook 
 {
-    /** @var string **/
+    /** 
+     * @var string 
+     **/
     protected $signedRequest;
-    /** @var string **/
+    /**
+     * @var string
+     **/
     protected $fbSecret;
-    /** @var string **/
+    /** 
+     * @var string 
+     **/
     protected $fbClientId;
-    /** @var Spabby\Facebook\Auth **/
+    /** 
+     * @var Spabby\Facebook\Auth 
+     **/
     protected $auth;
-    /** @var Access; **/
+    /** 
+     * @var Access; 
+     **/
     protected $api;
     /**
      * Configuration array, set using the constructor or using ::setConfig()
@@ -38,8 +48,11 @@ class Facebook
     
     /**
      * Constructor
-     * @param string $fbSecret Facebook API Secret token
-     * @param string $signedRequest Signed request string posted from Facebook
+     * @param string $fbSecret  Facebook API Secret token
+     * @param int $fbClientId  Facebook Client ID
+     * @param string $signedRequest  Signed request string posted from Facebook (optional)
+     * @param string $fbCode  Access code passed from Facebook (optional)
+     * @param array $config  Configuration array (optional)
      */
     public function __construct($fbSecret, $fbClientId, 
             $signedRequest=null, $fbCode=null, array $config=null)
@@ -57,8 +70,8 @@ class Facebook
      * Set configuration parameters for this HTTP client
      *
      * @param  Config|array $config
-     * @return Client
-     * @throws Client\Exception
+     * @return Facebook
+     * @throws Facebook\Exception
      */
     public function setConfig($config = array())
     {
@@ -78,6 +91,7 @@ class Facebook
     /**
      * Returns valid Facebook Auth object (if authentication is successful)
      * @return Facebook\Auth
+     * @throws Facebook\Exception\AuthException
      */
     public function getAuth()
     {        
